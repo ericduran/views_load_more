@@ -1,0 +1,54 @@
+<?php
+
+/**
+ * Implementation of hook_views_api().
+ */
+function views_load_more_views_api() {
+  return array('api' => '3.0-alpha1');
+}
+
+// We need to implement our own tpls for items being return via the load-more pager.
+
+/**
+ * Implementation of hook_theme().
+ */
+function views_load_more_theme() {
+  return array(
+    'views_load_more_pager' => array(
+      'arguments' => array('element' => 0),
+    ),
+  );
+}
+
+function views_load_more_ajax_data_alter($object, $type , $view) {
+  // Change the callback if its a views_load_more pagers.
+  if (is_a($view->query->pager, 'views_plugin_pager_load_more')) {
+    $object->__callbacks = array('Drupal.views_load_more');    
+  }
+}
+
+
+
+function theme_views_load_more_pager($tags = array(), $limit = 10, $element = 0, $parameters = array(), $quantity = 9) {
+  global $pager_total;
+
+  // Lets add our JS.
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/waypoints.min.js', 'module');
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js', 'module');
+
+  // Lets get out load more button.
+  $li_next = theme('pager_next', (isset($tags[3]) ? $tags[3] : t('Load More')), $limit, $element, 1, $parameters);
+  
+  if (empty($li_next)) {
+    $li_next = "&nbsp;";
+  }
+
+  if ($pager_total[$element] > 1) {
+    $items[] = array(
+      'class' => 'pager-next',
+      'data' => $li_next,
+    );
+
+    return theme('item_list', $items, NULL, 'ul', array('class' => 'pager'));
+  }
+}
