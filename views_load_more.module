@@ -23,7 +23,7 @@ function views_load_more_theme() {
 function views_load_more_ajax_data_alter($object, $type , $view) {
   // Change the callback if its a views_load_more pagers.
   if (is_a($view->query->pager, 'views_plugin_pager_load_more')) {
-    $object->__callbacks = array('Drupal.views_load_more');    
+    $object->__callbacks = array('Drupal.viewsLoadMore');    
   }
 }
 
@@ -33,12 +33,11 @@ function theme_views_load_more_pager($tags = array(), $limit = 10, $element = 0,
   global $pager_total;
 
   // Lets add our JS.
-  drupal_add_js(drupal_get_path('module', 'views_load_more').'/waypoints.min.js', 'module');
   drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js', 'module');
 
   // Lets get out load more button.
   $li_next = theme('pager_next', (isset($tags[3]) ? $tags[3] : t('Load More')), $limit, $element, 1, $parameters);
-  
+
   if (empty($li_next)) {
     $li_next = "&nbsp;";
   }
