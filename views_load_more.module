@@ -15,39 +15,80 @@ function views_load_more_views_api() {
 function views_load_more_theme() {
   return array(
     'views_load_more_pager' => array(
-      'arguments' => array('element' => 0),
+      'variables' => array('tags' => array(), 'quantity' => 10, 'element' => 0, 'parameters' => array()),
+      'pattern' => 'views_load_more_pager__',
     ),
   );
 }
 
-function views_load_more_ajax_data_alter($object, $type , $view) {
-  // Change the callback if its a views_load_more pagers.
-  if (is_a($view->query->pager, 'views_plugin_pager_load_more')) {
-    $object->__callbacks = array('Drupal.viewsLoadMore');    
+/**
+ * Warning!!! Implements a serious HACK, I can't figure out another way of doing this.
+ * 
+ * I'm trying to replace the callback that views does for our load_more pager. There really
+ * is nothing we can do to differentiate a views command from another module command.
+ * 
+ * What I do is set all the views_load_more pager to has an pager_element id of 7. Then I save the view
+ * dom id for that pager and check that against the commends select. After I parse down the commands 
+ * and see if the "selector" is set and I check if the selector on of the views-dom-id that has the pager_element id
+ * of 7. If it is, Then I switch the command to be my custom viewsLoadMoreAppend
+ * ajax command. 
+ */
+function views_load_more_ajax_render_alter(&$commands) {
+  $views_load_more_views = array();
+  if (isset($commands[0]) && isset($commands[0]['settings'])
+  && isset($commands[0]['settings']['views'])) {
+    if (!empty($commands[0]['settings']['views']['ajaxViews']) && $ajax_views = $commands[0]['settings']['views']['ajaxViews']) {
+      foreach ($ajax_views as $view) {
+        if ($view['pager_element'] == 7) {
+          $views_load_more_views[] = '.view-dom-id-' . $view['view_dom_id'];
+        }
+      }
+    }
+  }
+  
+  if (!empty($views_load_more_views)) {
+    foreach ($commands as $key => $command) {
+      if (isset($command['selector']) && in_array($command['selector'], $views_load_more_views)) {
+        $commands[$key]['command'] = 'viewsLoadMoreAppend';
+        $commands[$key]['method'] = 'append';
+      }
+    }
   }
 }
 
+function theme_views_load_more_pager($vars) {
+  global $pager_page_array, $pager_total;  
 
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
+  
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
 
-function theme_views_load_more_pager($tags = array(), $limit = 10, $element = 0, $parameters = array(), $quantity = 9) {
-  global $pager_total;
-
-  // Lets add our JS.
-  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js', 'module');
-
-  // Lets get out load more button.
-  $li_next = theme('pager_next', (isset($tags[3]) ? $tags[3] : t('Load More')), $limit, $element, 1, $parameters);
-
+  $li_next = theme('pager_next',
+    array(
+      'text' => (isset($tags[3]) ? $tags[3] : t('Load More')),
+      'element' => $element,
+      'interval' => 1,
+      'parameters' => $parameters,
+    )
+  );
   if (empty($li_next)) {
     $li_next = "&nbsp;";
   }
 
   if ($pager_total[$element] > 1) {
     $items[] = array(
-      'class' => 'pager-next',
+      'class' => array('pager-next'),
       'data' => $li_next,
     );
-
-    return theme('item_list', $items, NULL, 'ul', array('class' => 'pager'));
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager')),
+      )
+    );
   }
 }

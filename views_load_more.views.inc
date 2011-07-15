@@ -12,7 +12,7 @@ function views_load_more_views_plugins() {
     'module' => 'views_load_more',
     'pager' => array(
       'load_more' => array(
-        'title' => t('Load More'),
+        'title' => t('Load More Pager'),
         'help' => t('views_load_more'),
         'handler' => 'views_plugin_pager_load_more',
         'uses options' => TRUE,

@@ -1,4 +1,6 @@
 name = Views Load More
 description = Yet another load more pager for views
-core = 6.x
+core = 7.x
 dependencies[] = views
+files[] = views_load_more.views.inc
+files[] = views_plugin_pager_load_more.inc
