@@ -15,9 +15,8 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
   
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-    $form['id']['#default_value'] = 7;
-    $form['id']['#access'] = FALSE;
   }
+
   function render($input) {
     $pager_theme = views_theme_functions('views_load_more_pager', $this->view, $this->display);
     return theme($pager_theme, array(

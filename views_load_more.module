@@ -22,33 +22,13 @@ function views_load_more_theme() {
 }
 
 /**
- * Warning!!! Implements a serious HACK, I can't figure out another way of doing this.
- * 
- * I'm trying to replace the callback that views does for our load_more pager. There really
- * is nothing we can do to differentiate a views command from another module command.
- * 
- * What I do is set all the views_load_more pager to has an pager_element id of 7. Then I save the view
- * dom id for that pager and check that against the commends select. After I parse down the commands 
- * and see if the "selector" is set and I check if the selector on of the views-dom-id that has the pager_element id
- * of 7. If it is, Then I switch the command to be my custom viewsLoadMoreAppend
- * ajax command. 
+ * Implements hook_views_ajax_data_alter().
  */
-function views_load_more_ajax_render_alter(&$commands) {
-  $views_load_more_views = array();
-  if (isset($commands[0]) && isset($commands[0]['settings'])
-  && isset($commands[0]['settings']['views'])) {
-    if (!empty($commands[0]['settings']['views']['ajaxViews']) && $ajax_views = $commands[0]['settings']['views']['ajaxViews']) {
-      foreach ($ajax_views as $view) {
-        if ($view['pager_element'] == 7) {
-          $views_load_more_views[] = '.view-dom-id-' . $view['view_dom_id'];
-        }
-      }
-    }
-  }
-  
-  if (!empty($views_load_more_views)) {
+function views_load_more_views_ajax_data_alter(&$commands, $view) {
+  if (is_a($view->query->pager, 'views_plugin_pager_load_more')) {
     foreach ($commands as $key => $command) {
-      if (isset($command['selector']) && in_array($command['selector'], $views_load_more_views)) {
+      // the replace should the only one, but just incase, we'll make sure.
+      if ($command['command'] == 'insert' && $command['selector'] == '.view-dom-id-' . $view->dom_id) {
         $commands[$key]['command'] = 'viewsLoadMoreAppend';
         $commands[$key]['method'] = 'append';
       }
