@@ -54,4 +54,23 @@
       // Apply any settings from the returned JSON if available.
     }
   }
+
+  /**
+   * Attaches the AJAX behavior to Views Load More waypoint support.
+   */
+  Drupal.behaviors.ViewsLoadMore = {};
+  Drupal.behaviors.ViewsLoadMore.attach = function() {
+    if (Drupal.settings && Drupal.settings.viewsLoadMore && Drupal.settings.views.ajaxViews) {
+      opts = {
+        offset: '100%'
+      };
+      $.each(Drupal.settings.viewsLoadMore, function(i, settings) {
+        var view = '.view-' + settings.view_name + '.view-display-id-' + settings.view_display_id + ' .pager-next a';
+        $(view).bind('waypoint.reached', function(event, direction) {
+           $(view).click();
+        });
+        $(view).waypoint(opts);
+      });
+    }
+  };
 })(jQuery);
