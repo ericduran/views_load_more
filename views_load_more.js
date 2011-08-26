@@ -46,7 +46,7 @@
     // Add the new content to the page.
     wrapper.find('.pager a').remove();
     wrapper.find('.item-list').html(new_content.find('.pager'));
-    wrapper.find('.view-content')[method](new_content.find('.views-row'));
+    wrapper.find('.view-content')[method](new_content.find('.view-content').children());
 
     // Attach all JavaScript behaviors to the new content
     wrapper.removeClass('views-processed');
