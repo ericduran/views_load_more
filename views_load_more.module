@@ -67,7 +67,7 @@ function theme_views_load_more_pager($vars) {
         'items' => $items,
         'title' => NULL,
         'type' => 'ul',
-        'attributes' => array('class' => array('pager')),
+        'attributes' => array('class' => array('pager', 'pager-load-more')),
       )
     );
   }
