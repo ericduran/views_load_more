@@ -43,10 +43,18 @@
       $.waypoints('refresh');
     }
 
+    // If we're using any effects. Hide the new content before adding it to the DOM.
+    if (effect.showEffect != 'show') {
+      new_content.find('.view-content').children().hide();
+    }
+
     // Add the new content to the page.
     wrapper.find('.pager a').remove();
     wrapper.find('.pager').parent('.item-list').html(new_content.find('.pager'));
     wrapper.find('.view-content')[method](new_content.find('.view-content').children());
+    if (effect.showEffect != 'show') {
+      wrapper.find('.view-content').children(':not(:visible)')[effect.showEffect](effect.showSpeed);
+    }
 
     // Attach all JavaScript behaviors to the new content
     wrapper.removeClass('views-processed');

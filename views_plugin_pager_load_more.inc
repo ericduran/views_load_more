@@ -42,6 +42,38 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
         '#default_value' => $this->options['waypoint']['infinite'],
       );
     }
+    $form['effects'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#tree' => TRUE,
+      '#title' =>  t('JQuery Effects'),
+      '#input' => TRUE,
+    );
+    $form['effects']['type'] = array(
+      '#type' => 'select',
+      '#options' => array(
+        'none' => t('None'),
+        'fade' => t('Fade'),
+      ),
+      '#default_vaue' => 'none',
+      '#title' => t('Effect Type'),
+      '#default_value' => $this->options['effects']['type'],
+    );
+    $form['effects']['speed'] = array(
+      '#type' => 'select',
+      '#options' => array(
+        'slow' => t('Slow'),
+        'fast' => t('Fast'),
+      ),
+      '#states' => array(
+        'visible' => array(
+          '#edit-pager-options-effects-type' => array('value' => t('fade')),
+        ),
+      ),
+      '#title' => t('Effect Speed'),
+      '#default_value' => $this->options['effects']['speed'],
+    );
   }
 
   function render($input) {

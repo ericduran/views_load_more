@@ -31,6 +31,10 @@ function views_load_more_views_ajax_data_alter(&$commands, $view) {
       if ($command['command'] == 'insert' && $command['selector'] == '.view-dom-id-' . $view->dom_id) {
         $commands[$key]['command'] = 'viewsLoadMoreAppend';
         $commands[$key]['method'] = 'append';
+        if (isset($view->query->pager->options['effects']) && $view->query->pager->options['effects']['type'] != 'none') {
+          $commands[$key]['effect'] = $view->query->pager->options['effects']['type'];
+          $commands[$key]['speed'] = $view->query->pager->options['effects']['speed'];
+        }
       }
     }
   }
