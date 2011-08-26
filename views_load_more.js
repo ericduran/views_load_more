@@ -39,10 +39,13 @@
     // If removing content from the wrapper, detach behaviors first.
     var settings = response.settings || ajax.settings || Drupal.settings;
     Drupal.detachBehaviors(wrapper, settings);
+    if ($.waypoints != undefined) {
+      $.waypoints('refresh');
+    }
 
     // Add the new content to the page.
     wrapper.find('.pager a').remove();
-    wrapper.find('.pager').html(new_content.find('.pager'));
+    wrapper.find('.item-list').html(new_content.find('.pager'));
     wrapper.find('.view-content')[method](new_content.find('.views-row'));
 
     // Attach all JavaScript behaviors to the new content
@@ -58,19 +61,28 @@
   /**
    * Attaches the AJAX behavior to Views Load More waypoint support.
    */
-  Drupal.behaviors.ViewsLoadMore = {};
-  Drupal.behaviors.ViewsLoadMore.attach = function() {
-    if (Drupal.settings && Drupal.settings.viewsLoadMore && Drupal.settings.views.ajaxViews) {
-      opts = {
-        offset: '100%'
-      };
-      $.each(Drupal.settings.viewsLoadMore, function(i, settings) {
-        var view = '.view-' + settings.view_name + '.view-display-id-' + settings.view_display_id + ' .pager-next a';
-        $(view).bind('waypoint.reached', function(event, direction) {
-           $(view).click();
+  Drupal.behaviors.ViewsLoadMore = {
+    attach: function (context, settings) {
+      if (settings && settings.viewsLoadMore && settings.views.ajaxViews) {
+        opts = {
+          offset: '100%'
+        };
+        $.each(settings.viewsLoadMore, function(i, setting) {
+          var view = '.view-id-' + setting.view_name + '.view-display-id-' + setting.view_display_id + ' .pager-next a';
+          $(view).waypoint(function(event, direction) {
+            $(view).waypoint('remove');
+            $(view).click();
+          }, opts);
         });
-        $(view).waypoint(opts);
-      });
+      }
+    },
+    detach: function (context, settings, trigger) {
+      if (settings && Drupal.settings.viewsLoadMore && settings.views.ajaxViews) {
+        $.each(settings.viewsLoadMore, function(i, setting) {
+          var view = '.view-id-' + setting.view_name + '.view-display-id-' + setting.view_display_id + ' .pager-next a';
+          $(view, context).waypoint('destroy');
+        });
+      }
     }
-  };
+     };
 })(jQuery);
