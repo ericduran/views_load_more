@@ -26,6 +26,10 @@ function views_load_more_theme() {
  */
 function views_load_more_views_ajax_data_alter(&$commands, $view) {
   if (is_a($view->query->pager, 'views_plugin_pager_load_more')) {
+    // This is a work-around for allowing exposed for on the page.
+    if ($view->query->pager->current_page == 0) {
+      return;
+    }
     foreach ($commands as $key => $command) {
       // the replace should the only one, but just incase, we'll make sure.
       if ($command['command'] == 'insert' && $command['selector'] == '.view-dom-id-' . $view->dom_id) {
