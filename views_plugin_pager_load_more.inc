@@ -20,11 +20,29 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
         'infinite' => array('default' => FALSE),
       )
     );
+    $options['more_button_text'] = array(
+      'default' => t('Load more'),
+      'translateable' => TRUE,
+    );
     return $options;
   }
 
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
+
+    // Keep items per page as the first form element on the page followed by
+    // the option to change the 'load more' button text
+    $form['items_per_page']['#weight'] = -2;
+
+    // Provide an option for users to specify the text used on the 'load more' button
+    $form['more_button_text'] = array(
+      '#type' => 'textfield',
+      '#title' => t('More link text'),
+      '#description' => t('The text that will be displayed on the link that is used to load more elements. For example "Show me more"'),
+      '#default_value' => $this->options['more_button_text'] ? $this->options['more_button_text'] : t('Load more'),
+      '#weight' => -1,
+    );
+
     if (module_exists('waypoints')) {
       $form['waypoint'] = array(
         '#type' => 'fieldset',
@@ -89,8 +107,13 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
     }
 
     $pager_theme = views_theme_functions('views_load_more_pager', $this->view, $this->display);
-    return theme($pager_theme, array(
-      'parameters' => $input, 'element' => $this->options['id']));
+
+    $vars = array(
+      'parameters' => $input,
+      'element' => $this->options['id'],
+      'more_button_text' => $this->options['more_button_text'],
+    );
+
+    return theme($pager_theme, $vars);
   }
 }
-
