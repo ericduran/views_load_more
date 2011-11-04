@@ -24,6 +24,12 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
       'default' => t('Load more'),
       'translateable' => TRUE,
     );
+    $options['advance'] = array(
+      'contains' => array(
+        'row_class' => array('default' => ''),
+        'content_class' => array('default' => ''),
+      ),
+    );
     return $options;
   }
 
@@ -60,6 +66,21 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
         '#default_value' => $this->options['waypoint']['infinite'],
       );
     }
+    $form['advance'] = array(
+      '#type' => 'fieldset',
+      '#collapsible' => TRUE,
+      '#collapsed' => TRUE,
+      '#tree' => TRUE,
+      '#title' =>  t('Advance Options'),
+      '#input' => TRUE,
+      '#description' => t('Configure advance options.'),
+    );
+    $form['advance']['content_class'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Content selection selector'),
+      '#description' => t('Use for advance replace selector, extremely useful when overwriting the views tpl.'),
+      '#default_value' => $this->options['advance']['content_class'],
+    );
     $form['effects'] = array(
       '#type' => 'fieldset',
       '#collapsible' => TRUE,

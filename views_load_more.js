@@ -43,27 +43,28 @@
       $.waypoints('refresh');
     }
 
+    // Set up our default query options. This is for advance users that might
+    // change there views layout classes. This allows them to write there own
+    // jquery selector to replace the content with.
+    var content_query = response.options.content || '.view-content';
+
     // If we're using any effects. Hide the new content before adding it to the DOM.
     if (effect.showEffect != 'show') {
-      new_content.find('.view-content').children().hide();
+      new_content.find(content_query).children().hide();
     }
 
     // Add the new content to the page.
     wrapper.find('.pager a').remove();
     wrapper.find('.pager').parent('.item-list').html(new_content.find('.pager'));
-    wrapper.find('.view-content')[method](new_content.find('.view-content').children());
+    wrapper.find(content_query)[method](new_content.find(content_query).children());
     if (effect.showEffect != 'show') {
-      wrapper.find('.view-content').children(':not(:visible)')[effect.showEffect](effect.showSpeed);
+      wrapper.find(content_query).children(':not(:visible)')[effect.showEffect](effect.showSpeed);
     }
 
     // Attach all JavaScript behaviors to the new content
     wrapper.removeClass('views-processed');
     var settings = response.settings || ajax.settings || Drupal.settings;
     Drupal.attachBehaviors(wrapper, settings);
-
-    if (new_content.parents('html').length > 0) {
-      // Apply any settings from the returned JSON if available.
-    }
   }
 
   /**

@@ -39,6 +39,9 @@ function views_load_more_views_ajax_data_alter(&$commands, $view) {
           $commands[$key]['effect'] = $view->query->pager->options['effects']['type'];
           $commands[$key]['speed'] = $view->query->pager->options['effects']['speed'];
         }
+        $commands[$key]['options'] = array(
+          'content' => $view->query->pager->options['advance']['content_class'],
+        );
       }
     }
   }
