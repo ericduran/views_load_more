@@ -62,7 +62,11 @@
     }
 
     // Attach all JavaScript behaviors to the new content
-    wrapper.removeClass('views-processed');
+    // Remove the Jquery once Class, TODO: There needs to be a better
+    // way of doing this, look at .removeOnce() :-/
+    var classes = wrapper.attr('class');
+    var onceClass = classes.match(/jquery-once-[0-9]*-[a-z]*/);
+    wrapper.removeClass(onceClass[0]);
     var settings = response.settings || ajax.settings || Drupal.settings;
     Drupal.attachBehaviors(wrapper, settings);
   }
