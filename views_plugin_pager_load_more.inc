@@ -1,11 +1,18 @@
 <?php
 
 /**
+ * @file
+ *
  * The plugin to handle Load More pager.
  *
  * @ingroup views_pager_plugins
  */
+
 class views_plugin_pager_load_more extends views_plugin_pager_full {
+
+  /**
+   * Summary title overwrite.
+   */
   function summary_title() {
     if (!empty($this->options['offset'])) {
       return format_plural($this->options['items_per_page'], 'Load more pager, @count item, skip @skip', 'Load more pager, @count items, skip @skip', array('@count' => $this->options['items_per_page'], '@skip' => $this->options['offset']));
@@ -13,12 +20,15 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
       return format_plural($this->options['items_per_page'], 'Load more pager, @count item', 'Load more pager, @count items', array('@count' => $this->options['items_per_page']));
   }
 
+  /**
+   * Options definition overwrite.
+   */
   function option_definition() {
     $options = parent::option_definition();
     $options['waypoint'] = array(
       'contains' => array(
         'infinite' => array('default' => FALSE),
-      )
+      ),
     );
     $options['more_button_text'] = array(
       'default' => t('Load more'),
@@ -33,6 +43,9 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
     return $options;
   }
 
+  /**
+   * Options form overwrite.
+   */
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
@@ -40,7 +53,7 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
     // the option to change the 'load more' button text
     $form['items_per_page']['#weight'] = -2;
 
-    // Provide an option for users to specify the text used on the 'load more' button
+    // Option for users to specify the text used on the 'load more' button.
     $form['more_button_text'] = array(
       '#type' => 'textfield',
       '#title' => t('More link text'),
@@ -115,6 +128,9 @@ class views_plugin_pager_load_more extends views_plugin_pager_full {
     );
   }
 
+  /**
+   * render overwrite.
+   */
   function render($input) {
     if (module_exists('waypoints') && $this->options['waypoint']['infinite'] == 1) {
       $viewsLoadMore = array();

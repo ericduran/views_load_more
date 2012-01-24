@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * @file views_load_more.module
+ *
+ * A Views pager module to allow new content to be appended to the bottom
+ * of a view instead of replacing it.
+ */
+
+/**
  * Implementation of hook_views_api().
  */
 function views_load_more_views_api() {
