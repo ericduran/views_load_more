@@ -1,0 +1,19 @@
+language: php
+
+php:
+  - 5.3
+
+mysql:
+  database: drupal
+  username: root
+  encoding: utf8
+
+before_script:
+  - mysql -e 'create database drupal;'
+  - pyrus channel-discover channel-discover pear.drush.org
+  - pyrus install drush/drush
+  - phpenv rehash
+  - wget http://ftp.drupal.org/files/projects/drupal-7.14.zip
+  - unzip drupal-7.14.zip
+  - cd drupal-7.14
+  - drush si --yes
