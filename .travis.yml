@@ -16,4 +16,4 @@ before_script:
   - wget http://ftp.drupal.org/files/projects/drupal-7.14.zip
   - unzip drupal-7.14.zip
   - cd drupal-7.14
-  - drush si --yes
+  - drush site-install standard --db-url=mysql://root:@localhost/drupal
