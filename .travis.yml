@@ -8,5 +8,6 @@ mysql:
   username: root
   encoding: utf8
 
-before_script: ./test/ci/drupal_setup.sh
+before_script:
+  - ./test/ci/drupal_setup.sh
 script: ./test/ci/run_build.sh
