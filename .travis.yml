@@ -20,4 +20,4 @@ before_script:
  - "export PHANTOMJS_EXECUTABLE='phantomjs --local-to-remote-url-access=yes --ignore-ssl'"
 
 script:
- - ./bin/casperjs test test/casperjs"
+ - ./bin/casperjs test test/casperjs
