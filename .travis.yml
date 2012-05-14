@@ -8,12 +8,5 @@ mysql:
   username: root
   encoding: utf8
 
-before_script:
-  - mysql -e 'create database drupal;'
-  - pyrus channel-discover pear.drush.org
-  - pyrus install drush/drush
-  - phpenv rehash
-  - wget http://ftp.drupal.org/files/projects/drupal-7.14.zip
-  - unzip drupal-7.14.zip
-  - cd drupal-7.14
-  - drush site-install standard --db-url=mysql://root:@localhost/drupal --yes 
+before_script: ./test/ci/drupal_setup.sh
+script: ./test/ci/run_build.sh
