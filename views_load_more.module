@@ -1,6 +1,13 @@
 <?php
 
 /**
+ * @file views_load_more.module
+ *
+ * A Views pager module to allow new content to be appended to the bottom
+ * of a view instead of replacing it.
+ */
+
+/**
  * Implementation of hook_views_api().
  */
 function views_load_more_views_api() {
@@ -15,40 +22,75 @@ function views_load_more_views_api() {
 function views_load_more_theme() {
   return array(
     'views_load_more_pager' => array(
-      'arguments' => array('element' => 0),
+      'variables' => array('tags' => array(), 'quantity' => 10, 'element' => 0, 'parameters' => array()),
+      'pattern' => 'views_load_more_pager__',
     ),
   );
 }
 
-function views_load_more_ajax_data_alter($object, $type , $view) {
-  // Change the callback if its a views_load_more pagers.
+/**
+ * Implements hook_views_ajax_data_alter().
+ */
+function views_load_more_views_ajax_data_alter(&$commands, $view) {
   if (is_a($view->query->pager, 'views_plugin_pager_load_more')) {
-    $object->__callbacks = array('Drupal.views_load_more');    
+    // This is a work-around for allowing exposed for on the page.
+    if ($view->query->pager->current_page == 0) {
+      return;
+    }
+    foreach ($commands as $key => $command) {
+      // remove "viewsScrollTop" command, as this behavior is unnecessary.
+      if ($command['command'] == 'viewsScrollTop') {
+        unset($commands[$key]);
+      }
+      // the replace should the only one, but just incase, we'll make sure.
+      if ($command['command'] == 'insert' && $command['selector'] == '.view-dom-id-' . $view->dom_id) {
+        $commands[$key]['command'] = 'viewsLoadMoreAppend';
+        $commands[$key]['method'] = 'append';
+        if (isset($view->query->pager->options['effects']) && $view->query->pager->options['effects']['type'] != 'none') {
+          $commands[$key]['effect'] = $view->query->pager->options['effects']['type'];
+          $commands[$key]['speed'] = $view->query->pager->options['effects']['speed'];
+        }
+        $commands[$key]['options'] = array(
+          'content' => $view->query->pager->options['advance']['content_class'],
+        );
+      }
+    }
   }
 }
 
+function theme_views_load_more_pager($vars) {
+  global $pager_page_array, $pager_total;
 
+  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js');
 
-function theme_views_load_more_pager($tags = array(), $limit = 10, $element = 0, $parameters = array(), $quantity = 9) {
-  global $pager_total;
+  $tags = $vars['tags'];
+  $element = $vars['element'];
+  $parameters = $vars['parameters'];
 
-  // Lets add our JS.
-  drupal_add_js(drupal_get_path('module', 'views_load_more').'/waypoints.min.js', 'module');
-  drupal_add_js(drupal_get_path('module', 'views_load_more').'/views_load_more.js', 'module');
-
-  // Lets get out load more button.
-  $li_next = theme('pager_next', (isset($tags[3]) ? $tags[3] : t('Load More')), $limit, $element, 1, $parameters);
-  
+  $li_next = theme('pager_next',
+    array(
+      'text' => (isset($tags[3]) ? $tags[3] : t($vars['more_button_text'])),
+      'element' => $element,
+      'interval' => 1,
+      'parameters' => $parameters,
+    )
+  );
   if (empty($li_next)) {
     $li_next = "&nbsp;";
   }
 
   if ($pager_total[$element] > 1) {
     $items[] = array(
-      'class' => 'pager-next',
+      'class' => array('pager-next'),
       'data' => $li_next,
     );
-
-    return theme('item_list', $items, NULL, 'ul', array('class' => 'pager'));
+    return theme('item_list',
+      array(
+        'items' => $items,
+        'title' => NULL,
+        'type' => 'ul',
+        'attributes' => array('class' => array('pager', 'pager-load-more')),
+      )
+    );
   }
 }

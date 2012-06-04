@@ -1,4 +1,7 @@
 name = Views Load More
-description = Yet another load more pager for views
-core = 6.x
+description = A pager plugin for views. Gives users the option to add a 'more' button to a view and have the results appended to existing results being displayed.
+core = 7.x
+package = Views
 dependencies[] = views
+files[] = views_load_more.views.inc
+files[] = views_plugin_pager_load_more.inc
