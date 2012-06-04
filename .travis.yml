@@ -21,3 +21,4 @@ before_script:
 
 script:
  - python ./bin/casperjs/bin/casperjs test ./test/casperjs/
+
