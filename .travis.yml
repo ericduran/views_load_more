@@ -18,8 +18,11 @@ before_script:
  - cd drupal-7.14
  - drush site-install standard --db-url=mysql://root:@localhost/drupal --yes
  - "export PHANTOMJS_EXECUTABLE='phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes'"
- - ls -l ./bin/casperjs/bin #testing
- - ls -l #testing
-script:
- - python ./bin/casperjs/bin/casperjs test ./test/casperjs/
+ - git clone git://github.com/n1k0/casperjs.git
+ - cd casperjs
+ - git checkout tags/0.6.10
+ - cd bin/casperjs
+ - casperjs --version
 
+script:
+ - ls -l
