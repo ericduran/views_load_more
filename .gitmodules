@@ -1,0 +1,6 @@
+[submodule "caspterjs"]
+	path = caspterjs
+	url = git://github.com/n1k0/casperjs.git
+[submodule "bin/casperjs"]
+	path = bin/casperjs
+	url = git://github.com/n1k0/casperjs.git
