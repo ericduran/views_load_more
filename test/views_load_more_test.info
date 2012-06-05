@@ -1,0 +1,6 @@
+name = Views Load More Test
+description = Test module for views_load_more
+core = 7.x
+package = Views
+dependencies[] = node
+dependencies[] = views_load_more

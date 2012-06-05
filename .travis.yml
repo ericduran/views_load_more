@@ -22,8 +22,8 @@ before_script:
  - git clone git://github.com/n1k0/casperjs.git
  - cd casperjs
  - git checkout tags/0.6.10
- - cd bin/casperjs
+ - cd bin
  - casperjs --version
 
 script:
- - ls -l
+ - casperjs test ../../test/casperjs/
