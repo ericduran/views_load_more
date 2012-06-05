@@ -17,7 +17,7 @@ before_script:
  - tar -xf drupal-7.14.tar.gz
  - cd drupal-7.14
  - drush site-install standard --db-url=mysql://root:@localhost/drupal --yes
- - drush rs 8080
+ - nohup 'drush rs 8080' &
  - cd ..
  - git clone git://github.com/n1k0/casperjs.git
  - cd casperjs
