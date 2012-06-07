@@ -1,3 +1,9 @@
-casper.test.comment('My first test file');
-casper.test.assert(true, "true is so true");
-casper.test.done(); // I must be called!
+casper.test.comment('Making sure our test site is loaded correctly');
+
+casper.start('http://localhost:8080/', function() {
+  this.test.assertHttpStatus(200, 'Testing site is up');
+});
+
+casper.run(function() {
+    this.test.done();
+});

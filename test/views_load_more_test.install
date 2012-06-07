@@ -12,12 +12,11 @@
  */
 function views_load_more_test_install() {
   drupal_load('module', 'node');
-  foreach (array(1, 2, 3, 4) as $number) {
+  // Set up dummy content for our default views.
+  foreach (array(2, 3, 4, 5, 6, 7) as $number) {
     $node = new stdClass();
-    $node->type = 'page';
+    $node->type = 'article';
     $node->title = "views_load_more Test {$number}";
     node_save($node);
   }
 }
-
-
