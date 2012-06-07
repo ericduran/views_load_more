@@ -9,9 +9,8 @@ mysql:
   encoding: utf8
 
 before_script:
- - php -i | grep pdo
- - sudo apt-get install php5-cgi php5-mysql
- - sudo apt-get install php5-mysql #I know not needed, but I'm goign to try it anyway
+ - php -i
+ - sudo apt-get install php5-cgi
  - mysql -e 'create database drupal;'
  - pyrus channel-discover pear.drush.org
  - pyrus install drush/drush
