@@ -19,7 +19,7 @@ before_script:
  - drush site-install standard --db-url=mysql://root:@localhost/drupal --yes
  - git clone --quiet --branch casper-test git://github.com/ericduran/views_load_more.git ./sites/all/modules/views_load_more
  - drush en views_load_more_test --yes
- - nohup drush run-server 8080 &
+ - nohup drush runserver 8080 &
  - cd ..
  - git clone git://github.com/n1k0/casperjs.git
  - cd casperjs
