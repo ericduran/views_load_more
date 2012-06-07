@@ -18,7 +18,6 @@ before_script:
  - wget http://ftp.drupal.org/files/projects/drupal-7.14.tar.gz
  - tar -xf drupal-7.14.tar.gz
  - cd drupal-7.14
- - #drush site-install standard --db-url=mysql://root:@localhost/drupal --yes
  - drush site-install standard --db-url=sqlite://sites/default/files/.ht.sqlite --yes
  - git clone --quiet --branch casper-test git://github.com/ericduran/views_load_more.git ./sites/all/modules/views_load_more
  - drush en views_load_more_test --yes
