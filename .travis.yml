@@ -19,7 +19,7 @@ before_script:
  - drush site-install standard --db-url=mysql://root:@localhost/drupal --yes
  - git clone --quiet --branch casper-test git://github.com/ericduran/views_load_more.git ./sites/all/modules/views_load_more
  - drush en views_load_more_test --yes
- - nohup drush runserver 8080 &
+ - drush runserver 8080 &
  - curl http://127.0.0.1:8080
  - curl http://127.0.0.1:8080/test-views-load-more-pager
  - cd ..
