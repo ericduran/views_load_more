@@ -1,7 +1,6 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
 
 mysql:
@@ -10,6 +9,7 @@ mysql:
   encoding: utf8
 
 before_script:
+ - php -i | grep pdo # checking to see if mysql pdo is install.
  - sudo apt-get install php5-cgi
  - mysql -e 'create database drupal;'
  - pyrus channel-discover pear.drush.org
