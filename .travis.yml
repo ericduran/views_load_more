@@ -26,8 +26,6 @@ before_script:
  - sleep 3 # give xvfb some time to start
  - drush runserver --server=builtin 8080 &
  - sleep 3 # give Web server some time to bind to sockets, etc
- - curl http://localhost:8080
- - curl http://localhost:8080/test-views-load-more-pager
  - cd ..
  - git clone git://github.com/n1k0/casperjs.git
  - cd casperjs
