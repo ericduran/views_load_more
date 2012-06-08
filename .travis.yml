@@ -9,8 +9,6 @@ mysql:
   encoding: utf8
 
 before_script:
- - php -i
- - sudo apt-get install php5-cgi
  - mysql -e 'create database drupal;'
  - pyrus channel-discover pear.drush.org
  - pyrus install drush/drush
@@ -18,14 +16,14 @@ before_script:
  - wget http://ftp.drupal.org/files/projects/drupal-7.14.tar.gz
  - tar -xf drupal-7.14.tar.gz
  - cd drupal-7.14
- - drush site-install standard --db-url=sqlite://sites/default/files/.ht.sqlite --yes
+ - drush site-install standard --db-url=mysql://root:@localhost/drupal --yes
  - git clone --quiet --branch casper-test git://github.com/ericduran/views_load_more.git ./sites/all/modules/views_load_more
  - drush en views_load_more_test --yes
  - "export PHANTOMJS_EXECUTABLE='phantomjs --local-to-remote-url-access=yes --ignore-ssl-errors=yes'"
  - "export DISPLAY=:99.0"
  - "sh -e /etc/init.d/xvfb start"
  - sleep 3 # give xvfb some time to start
- - drush runserver 8080 &
+ - drush runserver --server=builtin 8080 &
  - sleep 3 # give Web server some time to bind to sockets, etc
  - curl http://127.0.0.1:8080
  - curl http://127.0.0.1:8080/test-views-load-more-pager
