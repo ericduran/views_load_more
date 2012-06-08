@@ -1,0 +1,22 @@
+<?php
+
+/**
+ * Install file for views_load_more_test module.
+ *
+ * This is going to create 3 dummy content for the views listing page.
+ */
+
+
+/**
+ * Implements hook_install().
+ */
+function views_load_more_test_install() {
+  drupal_load('module', 'node');
+  // Set up dummy content for our default views.
+  foreach (array(2, 3, 4, 5, 6, 7) as $number) {
+    $node = new stdClass();
+    $node->type = 'article';
+    $node->title = "views_load_more Test {$number}";
+    node_save($node);
+  }
+}
